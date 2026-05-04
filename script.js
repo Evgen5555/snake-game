@@ -99,20 +99,59 @@ document.addEventListener('DOMContentLoaded', () => {
         // Clear canvas
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         
-        // Draw food
-        ctx.fillStyle = '#ff0000';
-        ctx.fillRect(food.x * gridSize, food.y * gridSize, gridSize - 2, gridSize - 2);
+        // Draw food (egg)
+        const eggX = food.x * gridSize + gridSize / 2;
+        const eggY = food.y * gridSize + gridSize / 2;
+        const radius = gridSize / 2 - 2;
+        
+        // Egg white
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.ellipse(eggX, eggY, radius, radius * 1.2, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#cccccc';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        
+        // Yolk
+        ctx.fillStyle = '#ffdd00';
+        ctx.beginPath();
+        ctx.arc(eggX, eggY + 2, radius * 0.5, 0, Math.PI * 2);
+        ctx.fill();
         
         // Draw snake
         snake.forEach((segment, index) => {
+            const segX = segment.x * gridSize + gridSize / 2;
+            const segY = segment.y * gridSize + gridSize / 2;
+            
             if (index === 0) {
-                // Head
-                ctx.fillStyle = '#00ff00';
+                // Head (bigger and with eyes)
+                ctx.fillStyle = '#00aa00';
+                ctx.beginPath();
+                ctx.arc(segX, segY, gridSize / 2, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Eyes
+                ctx.fillStyle = '#000000';
+                const eyeOffsetX = dx !== 0 ? (dx / gridSize) * 3 : 3;
+                const eyeOffsetY = dy !== 0 ? (dy / gridSize) * 3 : 0;
+                
+                // Left eye
+                ctx.beginPath();
+                ctx.arc(segX - eyeOffsetX + (dy !== 0 ? 3 : 0), segY - eyeOffsetY - (dx !== 0 ? 3 : 0), 2, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Right eye
+                ctx.beginPath();
+                ctx.arc(segX + eyeOffsetX - (dy !== 0 ? 3 : 0), segY + eyeOffsetY + (dx !== 0 ? 3 : 0), 2, 0, Math.PI * 2);
+                ctx.fill();
             } else {
-                // Body
-                ctx.fillStyle = '#00cc00';
+                // Body (scaled circles)
+                ctx.fillStyle = index % 2 === 0 ? '#00cc00' : '#00dd00';
+                ctx.beginPath();
+                ctx.arc(segX, segY, gridSize / 2 - 1, 0, Math.PI * 2);
+                ctx.fill();
             }
-            ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize - 2, gridSize - 2);
         });
     }
     
