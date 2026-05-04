@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let dx = 0;
     let dy = 0;
     let score = 0;
-    let gameSpeed = 200; // milliseconds between frames (slowed down)
+    let gameSpeed = 300; // milliseconds between frames (even slower)
     let gameLoop = null;
     
     // Initialize game
@@ -96,25 +96,32 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Draw game elements
     function draw() {
-        // Clear canvas
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // Clear canvas with dark background
+        ctx.fillStyle = '#111122';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
         
         // Draw food (egg)
         const eggX = food.x * gridSize + gridSize / 2;
         const eggY = food.y * gridSize + gridSize / 2;
         const radius = gridSize / 2 - 2;
         
-        // Egg white
-        ctx.fillStyle = '#ffffff';
+        // Egg white with gradient
+        const eggGrad = ctx.createRadialGradient(eggX, eggY - 2, 1, eggX, eggY, radius * 1.2);
+        eggGrad.addColorStop(0, '#ffffff');
+        eggGrad.addColorStop(1, '#dddddd');
+        ctx.fillStyle = eggGrad;
         ctx.beginPath();
         ctx.ellipse(eggX, eggY, radius, radius * 1.2, 0, 0, Math.PI * 2);
         ctx.fill();
-        ctx.strokeStyle = '#cccccc';
+        ctx.strokeStyle = '#bbbbbb';
         ctx.lineWidth = 1;
         ctx.stroke();
         
-        // Yolk
-        ctx.fillStyle = '#ffdd00';
+        // Yolk with gradient
+        const yolkGrad = ctx.createRadialGradient(eggX, eggY + 1, 1, eggX, eggY + 2, radius * 0.5);
+        yolkGrad.addColorStop(0, '#ffff00');
+        yolkGrad.addColorStop(1, '#ff9900');
+        ctx.fillStyle = yolkGrad;
         ctx.beginPath();
         ctx.arc(eggX, eggY + 2, radius * 0.5, 0, Math.PI * 2);
         ctx.fill();
@@ -123,33 +130,56 @@ document.addEventListener('DOMContentLoaded', () => {
         snake.forEach((segment, index) => {
             const segX = segment.x * gridSize + gridSize / 2;
             const segY = segment.y * gridSize + gridSize / 2;
+            const segRadius = gridSize / 2 - 1;
             
             if (index === 0) {
-                // Head (bigger and with eyes)
-                ctx.fillStyle = '#00aa00';
+                // Head with bright gradient
+                const headGrad = ctx.createRadialGradient(segX - 2, segY - 2, 1, segX, segY, segRadius);
+                headGrad.addColorStop(0, '#00ff00');
+                headGrad.addColorStop(1, '#006600');
+                ctx.fillStyle = headGrad;
                 ctx.beginPath();
-                ctx.arc(segX, segY, gridSize / 2, 0, Math.PI * 2);
+                ctx.arc(segX, segY, segRadius, 0, Math.PI * 2);
                 ctx.fill();
                 
-                // Eyes
+                // Eyes with white shine
                 ctx.fillStyle = '#000000';
                 const eyeOffsetX = dx !== 0 ? (dx / gridSize) * 3 : 3;
                 const eyeOffsetY = dy !== 0 ? (dy / gridSize) * 3 : 0;
                 
                 // Left eye
                 ctx.beginPath();
-                ctx.arc(segX - eyeOffsetX + (dy !== 0 ? 3 : 0), segY - eyeOffsetY - (dx !== 0 ? 3 : 0), 2, 0, Math.PI * 2);
+                ctx.arc(segX - eyeOffsetX + (dy !== 0 ? 3 : 0), segY - eyeOffsetY - (dx !== 0 ? 3 : 0), 2.5, 0, Math.PI * 2);
+                ctx.fill();
+                // Left eye shine
+                ctx.fillStyle = '#ffffff';
+                ctx.beginPath();
+                ctx.arc(segX - eyeOffsetX + (dy !== 0 ? 3 : 0) - 0.5, segY - eyeOffsetY - (dx !== 0 ? 3 : 0) - 0.5, 1, 0, Math.PI * 2);
                 ctx.fill();
                 
                 // Right eye
+                ctx.fillStyle = '#000000';
                 ctx.beginPath();
-                ctx.arc(segX + eyeOffsetX - (dy !== 0 ? 3 : 0), segY + eyeOffsetY + (dx !== 0 ? 3 : 0), 2, 0, Math.PI * 2);
+                ctx.arc(segX + eyeOffsetX - (dy !== 0 ? 3 : 0), segY + eyeOffsetY + (dx !== 0 ? 3 : 0), 2.5, 0, Math.PI * 2);
+                ctx.fill();
+                // Right eye shine
+                ctx.fillStyle = '#ffffff';
+                ctx.beginPath();
+                ctx.arc(segX + eyeOffsetX - (dy !== 0 ? 3 : 0) - 0.5, segY + eyeOffsetY + (dx !== 0 ? 3 : 0) - 0.5, 1, 0, Math.PI * 2);
                 ctx.fill();
             } else {
-                // Body (scaled circles)
-                ctx.fillStyle = index % 2 === 0 ? '#00cc00' : '#00dd00';
+                // Body with gradient for volume
+                const bodyGrad = ctx.createRadialGradient(segX - 1, segY - 1, 1, segX, segY, segRadius);
+                if (index % 2 === 0) {
+                    bodyGrad.addColorStop(0, '#00ff88');
+                    bodyGrad.addColorStop(1, '#005533');
+                } else {
+                    bodyGrad.addColorStop(0, '#00cc66');
+                    bodyGrad.addColorStop(1, '#004422');
+                }
+                ctx.fillStyle = bodyGrad;
                 ctx.beginPath();
-                ctx.arc(segX, segY, gridSize / 2 - 1, 0, Math.PI * 2);
+                ctx.arc(segX, segY, segRadius, 0, Math.PI * 2);
                 ctx.fill();
             }
         });
