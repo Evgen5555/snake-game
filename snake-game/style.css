@@ -1,0 +1,160 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    text-align: center;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 500px;
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.game-info {
+    margin: 15px 0;
+    font-size: 18px;
+    color: #555;
+}
+
+#gameCanvas {
+    background-color: #000;
+    display: block;
+    margin: 0 auto 20px auto;
+    border: 2px solid #333;
+    border-radius: 5px;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+.controls {
+    margin: 20px 0;
+}
+
+.controls p {
+    margin-bottom: 10px;
+    color: #666;
+}
+
+.touch-controls {
+    display: grid;
+    grid-template-areas:
+        ". up ."
+        "left down right";
+    gap: 5px;
+    max-width: 200px;
+    margin: 0 auto;
+}
+
+.touch-controls button {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.touch-controls button:hover {
+    background-color: #45a049;
+}
+
+.touch-controls button:active {
+    background-color: #3e8e41;
+}
+
+/* Positioning for grid areas */
+.touch-controls #up { grid-area: up; }
+.touch-controls #left { grid-area: left; }
+.touch-controls #down { grid-area: down; }
+.touch-controls #right { grid-area: right; }
+
+#gameOver {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.8);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    z-index: 100;
+}
+
+#gameOver.hidden {
+    display: none;
+}
+
+#gameOver h2 {
+    margin-bottom: 20px;
+}
+
+#gameOver p {
+    margin-bottom: 30px;
+    font-size: 24px;
+}
+
+#gameOver button {
+    padding: 12px 24px;
+    font-size: 18px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#gameOver button:hover {
+    background-color: #45a049;
+}
+
+/* Responsive adjustments */
+@media (max-width: 500px) {
+    .touch-controls button {
+        width: 60px;
+        height: 60px;
+        font-size: 24px;
+    }
+    
+    #gameCanvas {
+        width: 300px;
+        height: 300px;
+    }
+    
+    .container {
+        padding: 15px;
+    }
+    
+    h1 {
+        font-size: 24px;
+    }
+    
+    .game-info {
+        font-size: 16px;
+    }
+}
